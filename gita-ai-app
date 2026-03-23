@@ -80,13 +80,14 @@ async function sendMessage() {
   try {
 
     const res = await fetch("https://gita-ai-backend-7261xxptt-arun-prakash-bhatt-s-projects.vercel.app/api/ask", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: text
-      })
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    message: text   // ⚠️ input नहीं, text
+  })
+});
     });
 
     const data = await res.json();
