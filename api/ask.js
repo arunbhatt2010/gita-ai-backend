@@ -13,10 +13,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body;
+    let body = req.body;
+
+    // 💥 Fix: अगर string आया तो parse करो
+    if (typeof body === "string") {
+      body = JSON.parse(body);
+    }
+
+    const message = body.message || "No message";
 
     return res.status(200).json({
-      reply: "Krishna says: Stay calm. You asked: " + message
+      reply: "Krishna says: Calm down 🙏 — " + message
     });
 
   } catch (err) {
