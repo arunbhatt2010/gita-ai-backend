@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const { message } = req.body;
 
     return res.status(200).json({
-      reply: "🔥 Krishna live: " + message
+      reply: "Krishna says: Stay calm. You asked: " + message
     });
 
   } catch (err) {
