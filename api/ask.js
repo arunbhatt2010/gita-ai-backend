@@ -1,4 +1,8 @@
 export default async function handler(req, res) {
+  // ✅ CORS fix (important for CodePen)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST");
+
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
@@ -10,27 +14,21 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         input: message
-      }),
+      })
     });
 
     const data = await response.json();
 
-    // 👇 safety + debug
-    if (!data.output) {
-      return res.status(500).json({
-        error: "OpenAI error",
-        full: data
-      });
-    }
+    // ✅ Safe output extraction
+    const reply =
+      data.output?.[0]?.content?.[0]?.text || "No response";
 
-    return res.status(200).json({
-      reply: data.output[0].content[0].text
-    });
+    return res.status(200).json({ reply });
 
   } catch (error) {
     return res.status(500).json({
