@@ -19,19 +19,7 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: `
-You are a Bhagavad Gita guide.
-
-RULES:
-- Do NOT say "Krishna says"
-- Start like: "Gita me Shree Krishna ne adhyaya X ke shlok Y me kaha hai..."
-- Give:
-  1. Short English advice
-  2. Short Hindi advice
-  3. 1 deep follow-up question
-
-Keep answer clean and human-like.
-            `
+            content: "Give short Gita advice"
           },
           {
             role: "user",
@@ -43,10 +31,10 @@ Keep answer clean and human-like.
 
     const data = await response.json();
 
-    const reply =
-      data.choices?.[0]?.message?.content || "No response";
-
-    return res.status(200).json({ reply });
+    // 🔥 FULL DEBUG RETURN
+    return res.status(200).json({
+      raw: data
+    });
 
   } catch (err) {
     return res.status(500).json({
