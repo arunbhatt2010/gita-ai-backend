@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
+
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -14,29 +15,14 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        input: message
-      })
+    // ✅ simple test response
+    return res.status(200).json({
+      reply: "Krishna says: " + message
     });
 
-    const data = await response.json();
-
-    const reply =
-      data.output?.[0]?.content?.[0]?.text || "No response";
-
-    return res.status(200).json({ reply });
-
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
-      error: "Something went wrong",
-      details: error.message
+      error: err.message
     });
   }
 }
