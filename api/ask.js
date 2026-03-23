@@ -13,7 +13,7 @@ async function sendMessage() {
   chat.appendChild(botDiv);
 
   try {
-    const res = await fetch("https://gita-ai-backend-7261xxptt-arun-prakash-bhatt-s-projects.vercel.app/api/ask", {
+    const res = await fetch("https://gita-ai-backend.vercel.app/api/ask", { {
       method: "POST", // ⚠️ MOST IMPORTANT
       headers: {
         "Content-Type": "application/json"
