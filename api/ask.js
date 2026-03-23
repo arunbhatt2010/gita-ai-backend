@@ -1,9 +1,11 @@
 export default async function handler(req, res) {
 
+  // 🔥 CORS FIX (MOST IMPORTANT)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // preflight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -15,8 +17,9 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
+    // 🧠 TEMP TEST RESPONSE
     return res.status(200).json({
-      reply: "TEST OK → " + message
+      reply: "Krishna says: Stay calm. You asked: " + message
     });
 
   } catch (err) {
