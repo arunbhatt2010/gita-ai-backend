@@ -6,30 +6,30 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: message }]
+        model: "gpt-4o-mini",
+        input: message
       }),
     });
 
     const data = await response.json();
 
-    // 🔥 सबसे important part
-    if (data.error) {
+    // 👇 safety + debug
+    if (!data.output) {
       return res.status(500).json({
         error: "OpenAI error",
-        details: data.error.message
+        full: data
       });
     }
 
     return res.status(200).json({
-      reply: data.choices[0].message.content
+      reply: data.output[0].content[0].text
     });
 
   } catch (error) {
