@@ -1,12 +1,13 @@
 export default async function handler(req, res) {
 
-  // ✅ CORS FIX
+  // ✅ CORS (FULL FIX)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
+  // ✅ Preflight fix
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    return res.status(200).json({});
   }
 
   if (req.method !== "POST") {
@@ -16,7 +17,6 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    // 🔥 OpenAI call
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -42,4 +42,4 @@ export default async function handler(req, res) {
       details: error.message
     });
   }
-                                }
+}
