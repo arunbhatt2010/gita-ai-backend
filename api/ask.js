@@ -1,45 +1,34 @@
-export default async function handler(req, res) {
+async function sendMessage() {
+  const inputBox = document.getElementById("input");
+  const chat = document.getElementById("chat");
 
-  // ✅ CORS (FULL FIX)
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  const text = inputBox.value.trim();
+  if (!text) return;
 
-  // ✅ Preflight fix
-  if (req.method === "OPTIONS") {
-    return res.status(200).json({});
-  }
+  chat.innerHTML += `<div><b>You:</b> ${text}</div>`;
+  inputBox.value = "";
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
+  const botDiv = document.createElement("div");
+  botDiv.innerText = "Thinking...";
+  chat.appendChild(botDiv);
 
   try {
-    const { message } = req.body;
-
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
+    const res = await fetch("https://gita-ai-backend-7261xxptt-arun-prakash-bhatt-s-projects.vercel.app/api/ask", {
+      method: "POST", // ⚠️ MOST IMPORTANT
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        input: message
+        message: text
       })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    const reply =
-      data.output?.[0]?.content?.[0]?.text || "No response";
-
-    return res.status(200).json({ reply });
-
-  } catch (error) {
-    return res.status(500).json({
-      error: "Something went wrong",
-      details: error.message
-    });
+    botDiv.innerHTML = `<b>Krishna:</b><br>${data.reply}`;
+    
+  } catch (err) {
+    botDiv.innerText = "Error connecting...";
+    console.error(err);
   }
 }
