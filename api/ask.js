@@ -14,24 +14,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [
-          { role: "user", content: message }
-        ]
+        messages: [{ role: "user", content: message }]
       }),
     });
 
     const data = await response.json();
 
-    // 🔥 DEBUG RETURN (important)
-    if (!data.choices) {
+    // 🔥 सबसे important part
+    if (data.error) {
       return res.status(500).json({
         error: "OpenAI error",
-        full_response: data
+        details: data.error.message
       });
     }
 
     return res.status(200).json({
-    reply: JSON.stringify(data)
+      reply: data.choices[0].message.content
     });
 
   } catch (error) {
