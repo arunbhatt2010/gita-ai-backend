@@ -1,20 +1,11 @@
 export default function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).send('Method Not Allowed');
-    return;
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  let body = '';
+  const { message } = req.body;
 
-  req.on('data', chunk => {
-    body += chunk;
-  });
-
-  req.on('end', () => {
-    const { message } = JSON.parse(body || '{}');
-
-    res.status(200).json({
-      reply: "You said: " + message
-    });
+  return res.status(200).json({
+    reply: "You said: " + message
   });
 }
