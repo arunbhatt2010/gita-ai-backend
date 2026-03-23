@@ -1,11 +1,20 @@
-module.exports = async function (req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+export default function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(405).send('Method Not Allowed');
+    return;
   }
 
-  const { message } = req.body;
+  let body = '';
 
-  return res.status(200).json({
-    reply: "You said: " + message,
+  req.on('data', chunk => {
+    body += chunk;
   });
-};
+
+  req.on('end', () => {
+    const { message } = JSON.parse(body || '{}');
+
+    res.status(200).json({
+      reply: "You said: " + message
+    });
+  });
+}
