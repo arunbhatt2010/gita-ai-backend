@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gita AI</title>
+
+<style>
+body {
+  background: black;
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  color: gold;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+}
+
+button {
+  background: gold;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#chat {
+  min-height: 200px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🕉️ Gita AI</h1>
+  <p>Get clarity in 30 seconds from Gita wisdom</p>
+
+  <div id="chat"></div>
+
+  <textarea id="input" placeholder="Ask your problem..."></textarea>
+  <button onclick="sendMessage()">Get Clarity →</button>
+</div>
+
+<script>
+async function sendMessage() {
+
+  const inputBox = document.getElementById("input");
+  const chat = document.getElementById("chat");
+
+  const text = inputBox.value.trim();
+  if (!text) return;
+
+  // User message
+  chat.innerHTML += `<div><b>You:</b> ${text}</div>`;
+  inputBox.value = "";
+
+  // Thinking...
+  const botDiv = document.createElement("div");
+  botDiv.innerText = "Thinking...";
+  chat.appendChild(botDiv);
+
+  try {
+
+    const res = await fetch("https://gita-ai-backend-7261xxptt-arun-prakash-bhatt-s-projects.vercel.app/api/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text
+      })
+    });
+
+    const data = await res.json();
+
+    botDiv.innerHTML = `
+      <div>
+      <b>Krishna Guide:</b><br><br>
+      ${data.reply ? data.reply.replace(/\\n/g, "<br>") : "No response"}
+      </div>
+    `;
+
+  } catch (err) {
+    botDiv.innerText = "Error: " + err.message;
+  }
+}
+</script>
+
+</body>
+</html>
